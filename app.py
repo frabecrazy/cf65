@@ -331,10 +331,6 @@ def show_main():
                 key=f"slider_{act}"
             )
             ore_dict[act] = ore
-
-    email_plain = st.selectbox("Emails (no attachments)", email_opts, index=0, key="email_plain")
-    email_attach = st.selectbox("Emails (with attachments)", email_opts, index=0, key="email_attach")
-    cloud = st.selectbox("Cloud storage used", cloud_opts, index=0, key="cloud")
     
     # Parte 2: Email, cloud, printing, connectivity
     st.markdown("""
@@ -347,9 +343,9 @@ def show_main():
     email_opts = ["-- Select option --", "1–10", "11–20", "21–30", "31–40", "> 40"]
     cloud_opts = ["-- Select option --", "<5GB", "5–20GB", "20–50GB", "50–100GB"]
 
-    email_plain = st.selectbox("Emails (no attachments)", email_opts, index=0)
-    email_attach = st.selectbox("Emails (with attachments)", email_opts, index=0)
-    cloud = st.selectbox("Cloud storage used", cloud_opts, index=0)
+    email_plain = st.selectbox("Emails (no attachments)", email_opts, index=0, key="email_plain")
+    email_attach = st.selectbox("Emails (with attachments)", email_opts, index=0, key="email_attach")
+    cloud = st.selectbox("Cloud storage used", cloud_opts, index=0, key="cloud")
 
     wifi = st.slider("Estimated daily Wi-Fi connection time", 0.0, 8.0, 4.0, 0.5)
     pages = st.number_input("Printed pages per day", 0, 100, 0)
@@ -760,6 +756,7 @@ elif st.session_state.page == "main":
     show_main()
 elif st.session_state.page == "results":
     show_results()
+
 
 
 
