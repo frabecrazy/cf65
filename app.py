@@ -406,10 +406,9 @@ def show_main():
 
 
 
-    # === FINAL BUTTON (VALIDATED) ===
-    col_center = st.columns([1, 2, 1])[1]  # centrato
+    # === FINAL BUTTON (ALWAYS VISIBLE, VALIDATES ON CLICK) ===
+    col_center = st.columns([1, 2, 1])[1]
     with col_center:
-        # Stile bottone
         st.markdown("""
             <style>
                 button[kind="primary"] {
@@ -427,29 +426,32 @@ def show_main():
             </style>
         """, unsafe_allow_html=True)
 
-        # Controlli validazione
-        unconfirmed_devices = [key for key in st.session_state.get("device_expanders", {}) if st.session_state.device_expanders[key]]
+        button_clicked = st.button("🌍 Discover Your Digital Carbon Footprint!", key="final", use_container_width=True)
 
-        missing_activities = False
-        for act in activity_factors[st.session_state.role]:
-            if st.session_state.get(f"slider_{act}") == "-- Select option --":
+        if button_clicked:
+            unconfirmed_devices = [key for key in st.session_state.get("device_expanders", {}) if st.session_state.device_expanders[key]]
+
+            missing_activities = False
+            for act in activity_factors[st.session_state.role]:
+                if st.session_state.get(f"slider_{act}") == "-- Select option --":
+                    missing_activities = True
+                    break
+
+            if st.session_state.get("email_plain", "-- Select option --") == "-- Select option --":
                 missing_activities = True
-                break
+            if st.session_state.get("email_attach", "-- Select option --") == "-- Select option --":
+                missing_activities = True
+            if st.session_state.get("cloud", "-- Select option --") == "-- Select option --":
+                missing_activities = True
 
-        if st.session_state.get("email_plain", "-- Select option --") == "-- Select option --":
-            missing_activities = True
-        if st.session_state.get("email_attach", "-- Select option --") == "-- Select option --":
-            missing_activities = True
-        if st.session_state.get("cloud", "-- Select option --") == "-- Select option --":
-            missing_activities = True
+            # Show warning(s) if something is missing
+            if unconfirmed_devices:
+                st.warning("⚠️ You have devices not yet confirmed. Please click 'Confirm' in each box to proceed.")
+            if missing_activities:
+                st.warning("⚠️ Please complete all digital activity fields before continuing.")
 
-        # Mostra il bottone finale solo se tutto è ok
-        if unconfirmed_devices:
-            st.warning("⚠️ You have devices not yet confirmed. Please click 'Confirm' in each box to proceed.")
-        elif missing_activities:
-            st.warning("⚠️ Please complete all digital activity fields before continuing.")
-        else:
-            if st.button("🌍 Discover Your Digital Carbon Footprint!", key="final", use_container_width=True):
+            # Proceed only if all is okay
+            if not unconfirmed_devices and not missing_activities:
                 st.session_state.results = {
                     "Devices": total_prod,
                     "E-Waste": total_eol,
@@ -458,6 +460,7 @@ def show_main():
                 }
                 st.session_state.page = "results"
                 st.rerun()
+
 
 
 
@@ -753,5 +756,6 @@ elif st.session_state.page == "main":
     show_main()
 elif st.session_state.page == "results":
     show_results()
+
 
 
