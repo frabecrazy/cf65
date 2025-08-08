@@ -332,6 +332,10 @@ def show_main():
             )
             ore_dict[act] = ore
 
+    email_plain = st.selectbox("Emails (no attachments)", email_opts, index=0, key="email_plain")
+    email_attach = st.selectbox("Emails (with attachments)", email_opts, index=0, key="email_attach")
+    cloud = st.selectbox("Cloud storage used", cloud_opts, index=0, key="cloud")
+    
     # Parte 2: Email, cloud, printing, connectivity
     st.markdown("""
         <hr style="margin-top: 30px; margin-bottom: 20px;">
@@ -756,6 +760,7 @@ elif st.session_state.page == "main":
     show_main()
 elif st.session_state.page == "results":
     show_results()
+
 
 
 
